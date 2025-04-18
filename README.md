@@ -1,6 +1,6 @@
 # qualtrics-tlx
 
-Custom css for NASA-TLX in Qualtrics
+Custom css for NASA-TLX in Qualtrics. This is forked from https://github.com/CMU-TBD/qualtrics-tlx to add the proper scale of "Perfect" to "Failure" as in the original NASA-TLX. It involves slightly more steps as a result of this, but avoids confusion around the scale for that question. 
 
 ## Summary
 
@@ -17,7 +17,7 @@ In your Qualtrics survey, create a “Qualtrics-ified” version of the TLX -- t
 How to do this:
 
 1. Create a Slider question.
-2. Give it 6 statements.
+2. Give it 1 statements.
 3. Give it a custom start position for the handle in the middle of the scale.
    - Toggle the “Custom start position” feature in the sidebar ON.
    - Toggle “Grid lines” ON. They will make sure your custom start positions stay where you want them to.
@@ -25,15 +25,8 @@ How to do this:
    - Drag each handle to the middle of its slider. It should snap to the middle grid line.
    - Toggle “Grid lines” OFF. You don’t want them there for the actual survey. Whatever position you leave each handle in will be its custom start position. Assuming you didn’t move them after positioning them in the middle of the slider, they should stay in the middle.
 4. Don’t Add labels or Show value.
-5. Add the Question text.
-   - You can use “Please use the sliders to answer each question below”, but this isn’t official or validated -- edit it as you see fit.
-6. Add the Statement text.
-   - Mental Demand: How mentally demanding was the task?
-   - Physical Demand: How physically demanding was the task?
-   - Temporal Demand: How hurried or rushed was the pace of the task?
-   - Performance: How successful were you in accomplishing what you were asked to do?
-   - Effort: How hard did you have to work to accomplish your level of performance?
-   - Frustration: How insecure, discouraged, irritated, stressed, and annoyed were you?
+5. Add the Question text for the first NASA-TLX item, Mental Demand: How mentally demanding was the task?.
+
 
 At this point, your complete survey question should look like this:
 
@@ -59,30 +52,62 @@ Turn the `onLoad()` function into the following by copy-pasting the code between
     });
 
 This finds the html element that is your question and changes its `id` to `nasa-tlx`. This is necessary because Qualtrics changes question IDs as you add new questions, Auto-number, etc. By always assigning this question the same `id` when it loads, you have a reliable identifier for it.
-Make sure you don’t somehow give an `id` of `nasa-tlx` to any other element in your survey. (Not that there’d be any reason to do that.)
+
+Then, copy the question you have created within Qualtrics 5 times, such that you have 6 identical "Mental Workload" sliders.
+Next, update the questions for each of the 5 additional items in the NASA-TLX, such that your survey contains all 6 questions for the NASA-TLX: 
+   - Mental Demand: How mentally demanding was the task?
+   - Physical Demand: How physically demanding was the task?
+   - Temporal Demand: How hurried or rushed was the pace of the task?
+   - Performance: How successful were you in accomplishing what you were asked to do?
+   - Effort: How hard did you have to work to accomplish your level of performance?
+   - Frustration: How insecure, discouraged, irritated, stressed, and annoyed were you?
+
+At this point, if you preview the survey, you will see that all 6 items are on a scale from "Very Low" to "Very High". This is the what we want for all items except for Performance, which goes from "Perfect" to "Failure". To make this change, we are going to slightly edit the Javascript for just the Performance question. When you open the javascript for the Performance item, it should look like what you inserted in the previous step. We are going to modify this slightly for the Performance question, by changing 'nasa-tlx' in 'jQuery('#' + qid).attr("id", "nasa-tlx");' to 'nasa-tlx-performance' such that the line reads:
+
+jQuery('#' + qid).attr("id", "nasa-tlx-performance");
+
 
 ## Step 3: Apply Custom CSS to turn the sliders into graded scales.
 
 Copy the below css (which can also be found in the [tlx.css](/tlx.css) file in this repo):
 
-    #nasa-tlx .track {
-        background-image: url(https://github.com/CMU-TBD/qualtrics-tlx/blob/main/tlx-scale.jpg?raw=true);
-        background-size: 770px 80px !important;
-        background-repeat: no-repeat;
-        height: 80px !important;
-    }
+#nasa-tlx .track {
+    background-image: url(https://github.com/villar10/qualtrics-tlx-w-performance/blob/main/tlx-scale.jpg?raw=true);
+    background-size: 770px 80px !important;
+    background-repeat: no-repeat;
+    height: 80px !important;
+}
 
-    #nasa-tlx .handle {
-        top: 15px !important;
-    }
+#nasa-tlx .handle {
+    top: 15px !important;
+}
 
-    #nasa-tlx .statement {
-        padding-bottom: 4px;
-    }
+#nasa-tlx .statement {
+    padding-bottom: 4px;
+}
 
-    #nasa-tlx .slider-container {
-        height: 200px;
-    }
+#nasa-tlx .slider-container {
+    height: 200px;
+}
+
+#nasa-tlx-performance .track {
+    background-image: url(https://github.com/villar10/qualtrics-tlx-w-performance/blob/main/tlx-scale_performance.jpg?raw=true);
+    background-size: 770px 80px !important;
+    background-repeat: no-repeat;
+    height: 80px !important;
+}
+
+#nasa-tlx-performance .handle {
+    top: 15px !important;
+}
+
+#nasa-tlx-performance .statement {
+    padding-bottom: 4px;
+}
+
+#nasa-tlx-performance .slider-container {
+    height: 200px;
+}
    
 Go to the Style tab of your survey’s Look and Feel, and paste it into the Custom CSS box.
 
